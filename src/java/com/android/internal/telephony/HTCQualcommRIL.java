@@ -24,6 +24,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcel;
+import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.telephony.CellInfo;
 import android.telephony.Rlog;
@@ -127,10 +128,21 @@ public class HTCQualcommRIL extends RIL implements CommandsInterface {
             case RIL_UNSOL_CDMA_3G_INDICATOR:
             case RIL_UNSOL_CDMA_ENHANCE_ROAMING_INDICATOR:
             case RIL_UNSOL_CDMA_NETWORK_BASE_PLUSCODE_DIAL:
-            case RIL_UNSOL_RESPONSE_PHONE_MODE_CHANGE:
-            case RIL_UNSOL_RESPONSE_VOICE_RADIO_TECH_CHANGED:
             case RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED:
-            case RIL_UNSOL_RESPONSE_DATA_NETWORK_STATE_CHANGED:
+            case RIL_UNSOL_RESPONSE_PHONE_MODE_CHANGE: {
+                /* Unhandled HTC responses */
+                break;
+            }
+            case RIL_UNSOL_RESPONSE_VOICE_RADIO_TECH_CHANGED: {
+                if (RILJ_LOGD) unsljLogRet(response, ret);
+
+                if (mVoiceRadioTechChangedRegistrants != null) {
+                    mVoiceRadioTechChangedRegistrants.notifyRegistrants(
+                                        new AsyncResult(null, ret, null));
+                }
+                break;
+            }
+            case RIL_UNSOL_RESPONSE_DATA_NETWORK_STATE_CHANGED: {
                 if (RILJ_LOGD) unsljLogRet(response, ret);
 
                 if (mExitEmergencyCallbackModeRegistrants != null) {
@@ -138,15 +150,16 @@ public class HTCQualcommRIL extends RIL implements CommandsInterface {
                                         new AsyncResult (null, null, null));
                 }
                 break;
+            }
             case RIL_UNSOL_RIL_CONNECTED: {
                 if (RILJ_LOGD) unsljLogRet(response, ret);
 
-                boolean skipRadioPowerOff = needsOldRilFeature("skipradiooff");
-
                 // Initial conditions
-                if (!skipRadioPowerOff) {
+                if (SystemProperties.get("ril.socket.reset").equals("1")) {
                     setRadioPower(false, null);
                 }
+                // Trigger socket reset if RIL connect is called again
+                SystemProperties.set("ril.socket.reset", "1");
                 setPreferredNetworkType(mPreferredNetworkType, null);
                 setCdmaSubscriptionSource(mCdmaSubscription, null);
                 setCellInfoListRate(Integer.MAX_VALUE, null);
