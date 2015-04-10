@@ -176,10 +176,28 @@ public class BlacklistUtils {
                 UserHandle.USER_CURRENT_OR_SELF) & mode) != 0;
     }
 
+    public static boolean isBlacklistAdvertisementNumberEnabled(Context context) {
+        return Settings.System.getIntForUser(context.getContentResolver(),
+                Settings.System.PHONE_BLACKLIST_ADVERTISEMENT_NUMBER_MODE, 0,
+                UserHandle.USER_CURRENT_OR_SELF) != 0 && isBlacklistEnabled(context);
+    }
+
+    public static boolean isBlacklistFraudNumberEnabled(Context context) {
+        return Settings.System.getIntForUser(context.getContentResolver(),
+                Settings.System.PHONE_BLACKLIST_FRAUD_NUMBER_MODE, 1,
+                UserHandle.USER_CURRENT_OR_SELF) != 0 && isBlacklistEnabled(context);
+    }
+
+    public static boolean isBlacklistHarassNumberEnabled(Context context) {
+        return Settings.System.getIntForUser(context.getContentResolver(),
+                Settings.System.PHONE_BLACKLIST_HARASS_NUMBER_MODE, 1,
+                UserHandle.USER_CURRENT_OR_SELF) != 0 && isBlacklistEnabled(context);
+    }
+
     public static boolean isBlacklistAllNumberEnabled(Context context) {
         return Settings.System.getIntForUser(context.getContentResolver(),
                 Settings.System.PHONE_BLACKLIST_ALL_NUMBER_MODE, 0,
-                UserHandle.USER_CURRENT_OR_SELF) != 0;
+                UserHandle.USER_CURRENT_OR_SELF) != 0 && isBlacklistEnabled(context);
     }
 
     public static boolean isBlacklistRegexEnabled(Context context) {
