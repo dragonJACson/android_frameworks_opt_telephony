@@ -36,6 +36,8 @@ import com.android.internal.telephony.uicc.UiccCardApplication;
 import com.android.internal.telephony.uicc.UiccController;
 import com.android.internal.telephony.uicc.IccCardApplicationStatus.AppState;
 
+import mokee.providers.MKSettings;
+
 /**
  * {@hide}
  */
@@ -598,7 +600,12 @@ public class GsmConnection extends Connection {
 
         if (Phone.DEBUG_PHONE) log("--dssds----"+mCnapName);
         mCnapNamePresentation = dc.namePresentation;
-        mNumberPresentation = dc.numberPresentation;
+
+        boolean connectedLineIdentification =
+                MKSettings.System.getInt(mOwner.mPhone.getContext().getContentResolver(),
+                        MKSettings.System.CONNECTED_LINE_IDENTIFICATION, 1) != 0;
+        if (mIsIncoming || connectedLineIdentification)
+            mNumberPresentation = dc.numberPresentation;
 
         if (newParent != mParent) {
             if (mParent != null) {
