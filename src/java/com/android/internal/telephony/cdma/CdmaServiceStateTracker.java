@@ -55,6 +55,7 @@ import com.android.internal.telephony.CommandsInterface.RadioState;
 import com.android.internal.telephony.EventLogTags;
 import com.android.internal.telephony.ICarrierConfigLoader;
 import com.android.internal.telephony.MccTable;
+import com.android.internal.telephony.Operators;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.PhoneFactory;
@@ -813,14 +814,14 @@ public class CdmaServiceStateTracker extends ServiceStateTracker {
 
                     if (!mIsSubscriptionFromRuim) {
                         // NV device (as opposed to CSIM)
-                        mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                        mNewSS.setOperatorName(Operators.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                     } else {
                         String brandOverride = mUiccController.getUiccCard(getPhoneId()) != null ?
                             mUiccController.getUiccCard(getPhoneId()).getOperatorBrandOverride() : null;
                         if (brandOverride != null) {
-                            mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                            mNewSS.setOperatorName(Operators.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
                         } else {
-                            mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                            mNewSS.setOperatorName(Operators.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                         }
                     }
                 } else {

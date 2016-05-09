@@ -62,6 +62,7 @@ import com.android.internal.telephony.CommandsInterface;
 import com.android.internal.telephony.EventLogTags;
 import com.android.internal.telephony.ICarrierConfigLoader;
 import com.android.internal.telephony.MccTable;
+import com.android.internal.telephony.Operators;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.ProxyController;
 import com.android.internal.telephony.Phone;
@@ -864,9 +865,9 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
                             mUiccController.getUiccCard(getPhoneId()).getOperatorBrandOverride() : null;
                         if (brandOverride != null) {
                             log("EVENT_POLL_STATE_OPERATOR: use brandOverride=" + brandOverride);
-                            mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                            mNewSS.setOperatorName(Operators.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
                         } else {
-                            mNewSS.setOperatorName (opNames[0], opNames[1], opNames[2]);
+                            mNewSS.setOperatorName(Operators.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                         }
                     }
                     break;
