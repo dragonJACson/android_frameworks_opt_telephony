@@ -634,7 +634,7 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
         //    EXTRA_SHOW_SPN = depending on IccRecords rule and radio/IMS state
         //    EXTRA_SPN = spn
         //    EXTRA_DATA_SPN = dataSpn
-        String spn = (iccRecords != null) ? iccRecords.getServiceProviderName() : "";
+        String spn = (iccRecords != null) ? Operators.operatorReplace(iccRecords.getServiceProviderName(), mSS.getOperatorNumeric()) : "";
         String dataSpn = spn;
         boolean showSpn = !TextUtils.isEmpty(spn)
                 && ((rule & SIMRecords.SPN_RULE_SHOW_SPN)
