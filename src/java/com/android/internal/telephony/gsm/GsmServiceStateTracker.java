@@ -62,7 +62,7 @@ import com.android.internal.telephony.CommandsInterface;
 import com.android.internal.telephony.EventLogTags;
 import com.android.internal.telephony.ICarrierConfigLoader;
 import com.android.internal.telephony.MccTable;
-import com.android.internal.telephony.Operators;
+import com.android.internal.telephony.OperatorUtils;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.ProxyController;
 import com.android.internal.telephony.Phone;
@@ -634,7 +634,7 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
         //    EXTRA_SHOW_SPN = depending on IccRecords rule and radio/IMS state
         //    EXTRA_SPN = spn
         //    EXTRA_DATA_SPN = dataSpn
-        String spn = (iccRecords != null) ? Operators.operatorReplace(iccRecords.getServiceProviderName(), mSS.getOperatorNumeric()) : "";
+        String spn = (iccRecords != null) ? OperatorUtils.operatorReplace(iccRecords.getServiceProviderName(), mSS.getOperatorNumeric()) : "";
         String dataSpn = spn;
         boolean showSpn = !TextUtils.isEmpty(spn)
                 && ((rule & SIMRecords.SPN_RULE_SHOW_SPN)
@@ -865,9 +865,9 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
                             mUiccController.getUiccCard(getPhoneId()).getOperatorBrandOverride() : null;
                         if (brandOverride != null) {
                             log("EVENT_POLL_STATE_OPERATOR: use brandOverride=" + brandOverride);
-                            mNewSS.setOperatorName(Operators.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
+                            mNewSS.setOperatorName(OperatorUtils.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
                         } else {
-                            mNewSS.setOperatorName(Operators.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
+                            mNewSS.setOperatorName(OperatorUtils.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                         }
                     }
                     break;

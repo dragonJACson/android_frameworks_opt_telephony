@@ -33,7 +33,7 @@ import android.util.Xml;
 
 import com.android.internal.util.XmlUtils;
 
-public class Operators {
+public class OperatorUtils {
 
     // Initialize list of Operator codes
     // this will be taken care of when garbage collection starts.
@@ -112,7 +112,7 @@ public class Operators {
             return storedOperators;
         }
         // this code will be taking care of when garbage collection start
-        Operators init = new Operators();
+        OperatorUtils init = new OperatorUtils();
         Map<String, String> operators = init.initList();
         storedOperators = operators.containsKey(numeric) ? operators.get(numeric) : longName;
         return storedOperators;
