@@ -85,6 +85,7 @@ import com.android.internal.telephony.cdma.CdmaSubscriptionSourceManager;
 import com.android.internal.telephony.cdma.EriInfo;
 import com.android.internal.telephony.dataconnection.DcTracker;
 import com.android.internal.telephony.metrics.TelephonyMetrics;
+import com.android.internal.telephony.OperatorUtils;
 import com.android.internal.telephony.uicc.IccCardApplicationStatus.AppState;
 import com.android.internal.telephony.uicc.IccRecords;
 import com.android.internal.telephony.uicc.RuimRecords;
@@ -1919,9 +1920,9 @@ public class ServiceStateTracker extends Handler {
                                 mUiccController.getUiccCard(getPhoneId()).getOperatorBrandOverride() : null;
                         if (brandOverride != null) {
                             log("EVENT_POLL_STATE_OPERATOR: use brandOverride=" + brandOverride);
-                            mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                            mNewSS.setOperatorName(OperatorUtils.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
                         } else {
-                            mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                            mNewSS.setOperatorName(OperatorUtils.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                         }
                     }
                 } else {
@@ -1944,14 +1945,14 @@ public class ServiceStateTracker extends Handler {
 
                         if (!mIsSubscriptionFromRuim) {
                             // NV device (as opposed to CSIM)
-                            mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                            mNewSS.setOperatorName(OperatorUtils.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                         } else {
                             String brandOverride = mUiccController.getUiccCard(getPhoneId()) != null ?
                                     mUiccController.getUiccCard(getPhoneId()).getOperatorBrandOverride() : null;
                             if (brandOverride != null) {
-                                mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                                mNewSS.setOperatorName(OperatorUtils.operatorReplace(brandOverride, opNames[2]), brandOverride, opNames[2]);
                             } else {
-                                mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                                mNewSS.setOperatorName(OperatorUtils.operatorReplace(opNames[0], opNames[2]), opNames[1], opNames[2]);
                             }
                         }
                     } else {
@@ -2206,7 +2207,7 @@ public class ServiceStateTracker extends Handler {
             //    EXTRA_SHOW_SPN = depending on IccRecords rule and radio/IMS state
             //    EXTRA_SPN = spn
             //    EXTRA_DATA_SPN = dataSpn
-            String spn = (iccRecords != null) ? iccRecords.getServiceProviderName() : "";
+            String spn = (iccRecords != null) ? OperatorUtils.operatorReplace(iccRecords.getServiceProviderName(), mSS.getOperatorNumeric()) : "";
             String dataSpn = spn;
             boolean showSpn = !TextUtils.isEmpty(spn)
                     && ((rule & SIMRecords.SPN_RULE_SHOW_SPN)
