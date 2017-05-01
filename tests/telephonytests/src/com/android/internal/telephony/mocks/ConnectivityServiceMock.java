@@ -610,6 +610,10 @@ public class ConnectivityServiceMock extends IConnectivityManager.Stub
         throw new RuntimeException("not implemented");
     }
 
+    public void startCaptivePortalApp(Network network) {
+        throw new RuntimeException("not implemented");
+    }
+
     public int tether(String iface) {
         throw new RuntimeException("not implemented");
     }
