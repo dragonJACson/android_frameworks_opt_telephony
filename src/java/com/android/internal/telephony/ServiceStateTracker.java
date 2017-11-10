@@ -2209,7 +2209,7 @@ public class ServiceStateTracker extends Handler {
                         "of service, set plmn='" + plmn + "'");
             } else if (combinedRegState == ServiceState.STATE_IN_SERVICE) {
                 // In either home or roaming service
-                plmn = mSS.getOperatorAlphaLong();
+                plmn = OperatorUtils.operatorReplace(mSS.getOperatorAlphaLong(), mSS.getOperatorNumeric());
                 showPlmn = !TextUtils.isEmpty(plmn) &&
                         ((rule & SIMRecords.SPN_RULE_SHOW_PLMN)
                                 == SIMRecords.SPN_RULE_SHOW_PLMN);
